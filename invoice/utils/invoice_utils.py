@@ -1,6 +1,7 @@
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from reportlab.lib import colors
+import os
 
 def print_pdf(invoice_number, date, billed_to, payment_info, items, subtotal, vat, ncdmb, grand_total, amount_in_words, filename):
     address = [
@@ -9,7 +10,7 @@ def print_pdf(invoice_number, date, billed_to, payment_info, items, subtotal, va
     "Email: info@nordatech.com.ng",
     "Phone: +2349041771115"
     ]
-    logo_path = "./invoice/utils/logo.png"
+    logo_path = os.path.join(os.path.dirname(__file__), 'logo.png')
 
     pdf = canvas.Canvas(filename, pagesize=letter)
     width, height = letter
