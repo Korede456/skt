@@ -104,15 +104,12 @@ def create_invoice(request):
     if request.method == "POST":
         form = InvoiceForm(request.POST)
         if form.is_valid():
-            print("Form is valid")  # Debug
-            print(form.cleaned_data)  # Debug
             try:
                 invoice = Invoice.create_invoice(
                     user=request.user, 
                     billed_to=form.cleaned_data["billed_to"], 
                     payment_info=form.cleaned_data["payment_info"]
                 )
-                print(invoice)
                 invoice.save()
                 messages.success(request, f"Invoice {invoice.invoice_number} created successfully!")
                 return redirect("invoice:invoice_detail", invoice_id=invoice.id)
