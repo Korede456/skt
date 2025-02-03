@@ -1,0 +1,48 @@
+{% extends "invoice/sidebar.html" %}
+<!-- Extend your base template -->
+{% load humanize %}
+{% block content %}
+<div class="container mt-5">
+  <h2 class="mb-4">Invoices</h2>
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <thead class="thead-dark">
+        <tr>
+          <th>Invoice Number</th>
+          <th>Date</th>
+          <th>Subtotal (₦)</th>
+          <th>VAT (₦)</th>
+          <th>NCDMB (₦)</th>
+          <th>Grand Total (₦)</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for invoice in invoices %}
+        <tr>
+          <td>{{ invoice.invoice_number }}</td>
+          <td>{{ invoice.date }}</td>
+          <td>{{ invoice.subtotal|intcomma }}</td>
+          <td>{{ invoice.vat|intcomma }}</td>
+          <td>{{ invoice.ncdmb|intcomma }}</td>
+          <td>{{ invoice.grand_total|intcomma }}</td>
+          <td>
+            <a
+              href="{% url 'invoice:invoice_detail' invoice.id %}"
+              class="btn btn-primary"
+            >
+              <i class="bx bx-show"></i>
+              View
+            </a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="7" class="text-center">No invoices found.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

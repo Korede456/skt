@@ -1,0 +1,99 @@
+{% extends "invoice/sidebar.html" %} {% load humanize %} {% block content %}
+<div class="container mt-5">
+  <div class="card shadow-lg p-4">
+    <h2 class="text-center mb-4">Invoice #{{ invoice.invoice_number }}</h2>
+
+    <!-- Invoice Header -->
+    <div class="row mb-4">
+      <div class="col-md-6">
+        <h5>Billed To:</h5>
+        <p>{{ invoice.billed_to.line_1 }}</p>
+        <p>{{ invoice.billed_to.line_2 }}</p>
+        <p>{{ invoice.billed_to.line_3 }}</p>
+      </div>
+      <div class="col-md-6 text-md-end">
+        <h5>Invoice Date</h5>
+        <p>{{ invoice.date|date:"F d, Y" }}</p>
+      </div>
+    </div>
+
+    <!-- Invoice Items -->
+    <h5>Invoice Items:</h5>
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead class="table-dark">
+          <tr>
+            <th>#</th>
+            <th>Description</th>
+            <th>Quantity</th>
+            <th>Unit Price</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for invoice_item in invoice.invoice_items.all %}
+          <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ invoice_item.item.description }}</td>
+            <td>{{ invoice_item.quantity }}</td>
+            <!-- Use quantity from InvoiceItem -->
+            <td>&#8358;{{ invoice_item.item.unit_price|intcomma }}</td>
+            <td>&#8358;{{ invoice_item.total_cost|intcomma }}</td>
+            <!-- Total for each item -->
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="5" class="text-center text-muted">No items found</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Invoice Totals -->
+    <div class="text-end mt-3">
+      <h6>Subtotal: <strong>&#8358;{{ invoice.subtotal|intcomma }}</strong></h6>
+      <h6>VAT (7.5%): <strong>&#8358;{{ invoice.vat|intcomma }}</strong></h6>
+      <h6>NCDMB (2%): <strong>&#8358;{{ invoice.ncdmb|intcomma }}</strong></h6>
+      <h6>
+        Grand Total: <strong>&#8358;{{ invoice.grand_total|intcomma }}</strong>
+      </h6>
+    </div>
+
+    <!-- Payment Information -->
+    <h5>Payment Information:</h5>
+    <ul class="list-group mb-4">
+      <li class="list-group-item">
+        <strong>Bank:</strong> {{ invoice.payment_info.detail_1 }}
+      </li>
+      <li class="list-group-item">
+        <strong>Account Name:</strong> {{ invoice.payment_info.detail_2 }}
+      </li>
+      <li class="list-group-item">
+        <strong>Account No:</strong> {{ invoice.payment_info.detail_3 }}
+      </li>
+      <li class="list-group-item">
+        <strong>SWIFT Code:</strong> {{ invoice.payment_info.detail_4 }}
+      </li>
+      <li class="list-group-item">
+        <strong>Sort Code:</strong> {{ invoice.payment_info.detail_5 }}
+      </li>
+      <li class="list-group-item">
+        <strong>TIN:</strong> {{ invoice.payment_info.detail_6 }}
+      </li>
+    </ul>
+
+    <!-- Actions -->
+    <div class="mt-4 text-center">
+      <a
+        href="{% url 'invoice:print_invoice' invoice.id %}"
+        class="btn btn-primary"
+        >Print Invoice</a
+      >
+      <a href="{% url 'invoice:invoice_list' %}" class="btn btn-secondary"
+        >Back to Invoices</a
+      >
+    </div>
+  </div>
+</div>
+{% endblock %}

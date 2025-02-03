@@ -1,0 +1,39 @@
+{% extends 'invoice/sidebar.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Create a New Item</h1>
+    <form method="post" novalidate class="needs-validation">
+        {% csrf_token %}
+        <fieldset>
+            <legend>Item Details</legend>
+            <div class="mb-3">
+                {{ form.description.label_tag }}
+                {{ form.description|add_class:"form-control" }}
+                {% for error in form.description.errors %}
+                    <div class="invalid-feedback d-block">{{ error }}</div>
+                {% endfor %}
+            </div>
+            <div class="mb-3">
+                {{ form.unit_price.label_tag }}
+                {{ form.unit_price|add_class:"form-control" }}
+                {% for error in form.unit_price.errors %}
+                    <div class="invalid-feedback d-block">{{ error }}</div>
+                {% endfor %}
+            </div>
+            <div class="mb-3">
+                {{ form.quantity.label_tag }}
+                {{ form.quantity|add_class:"form-control" }}
+                {% for error in form.quantity.errors %}
+                    <div class="invalid-feedback d-block">{{ error }}</div>
+                {% endfor %}
+            </div>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <button type="submit" class="btn btn-primary">Submit</button>
+                <a href="{% url 'invoice:item_list' %}" class="btn btn-secondary">Cancel</a>
+            </div>
+        </fieldset>
+    </form>
+</div>
+{% endblock %}

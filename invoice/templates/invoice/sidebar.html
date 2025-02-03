@@ -1,0 +1,85 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="{% static 'invoice/images/logo.png' %}" type="image/png" />
+    <title>{% block title %}Nordatech{% endblock %}</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+    <link href="{% static 'invoice/css/styles.css' %}" rel="stylesheet" />
+  </head>
+  <body id="body-pd">
+    <header class="header" id="header">
+      <div class="header_toggle">
+        <i class="bx bx-menu" id="header-toggle"></i>
+      </div>
+      <div class="header_img">
+        <img src="{% static 'invoice/images/logo.png' %}" alt="" />
+      </div>
+    </header>
+    <div class="l-navbar" id="nav-bar">
+      <nav class="nav">
+        <div>
+          <div class="nav_list">
+            <a href="{% url 'invoice:item_list' %}" class="nav_link active">
+              <i class="bx bx-grid-alt nav_icon"></i>
+              <span class="nav_name">Dashboard</span>
+            </a>
+            <a href="#" class="nav_link">
+              <i class="bx bx-user nav_icon"></i>
+              <span class="nav_name">Staffs</span>
+            </a>
+            <a href="{% url 'invoice:invoice_list' %}" class="nav_link">
+              <i class="bx bx-file nav_icon"></i>
+              <span class="nav_name">Invoices</span>
+            </a>
+            {% comment %}
+            <a href="#" class="nav_link">
+              <i class="bx bx-bookmark nav_icon"></i>
+              <span class="nav_name">Bookmark</span>
+            </a>
+            <a href="#" class="nav_link">
+              <i class="bx bx-folder nav_icon"></i>
+              <span class="nav_name">Files</span>
+            </a>
+            <a href="#" class="nav_link">
+              <i class="bx bx-bar-chart-alt-2 nav_icon"></i>
+              <span class="nav_name">Stats</span>
+            </a>
+            {% endcomment %}
+          </div>
+        </div>
+        <form
+          class="nav-link"
+          action="{% url 'account:logout' %}"
+          method="post"
+          style="display: inline"
+        >
+          {% csrf_token %}
+          <button
+            type="submit"
+            class="nav_link"
+            style="background: none; border: none; padding: 0; cursor: pointer"
+          >
+            <i class="bx bx-log-out nav_icon"></i>
+            <span class="nav_name">SignOut</span>
+          </button>
+        </form>
+      </nav>
+    </div>
+    <!--Container Main start-->
+    <div class="height-100 bg-light">{% block content %}{% endblock %}</div>
+    <!--Container Main end-->
+    <script src="{% static 'invoice/js/sidebar.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  </body>
+</html>

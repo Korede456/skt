@@ -1,0 +1,42 @@
+<!-- cart_page.html -->
+{% extends "invoice/sidebar.html" %}
+{% load humanize %}
+{% block content %}
+<div class="container mt-4">
+  <h1>Your Cart</h1>
+  {% if cart_items %}
+  <div class="table-responsive">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>Description</th>
+          <th>Unit Price</th>
+          <th>Qty</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in cart_items %}
+        <tr>
+          <td>{{ item.item.description }}</td>
+          <td>{{ item.item.unit_price|intcomma }}</td>
+          <td>{{ item.quantity }}</td>
+          <td>{{ item.total_cost|intcomma }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <h3>Total Quantity: {{ total_quantity|intcomma }}</h3>
+  <h3>Total Cost: ₦{{ total_cost|intcomma }}</h3>
+  {% else %}
+  <p>Your cart is empty.</p>
+  {% endif %}
+  <a href="{% url 'invoice:item_list' %}" class="btn btn-primary"
+    >Continue</a
+  >
+  <a href="{% url 'invoice:create_invoice' %}" class="btn btn-primary"
+    >Create Invoice</a
+  >
+</div>
+{% endblock %}

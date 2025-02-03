@@ -1,0 +1,128 @@
+{% extends 'invoice/sidebar.html' %}
+{% load humanize %}
+{% block content %}
+<div class="container mt-5">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Inventory</h1>
+    <a href="{% url 'invoice:add_item' %}" class="btn btn-primary">
+      <i class="bx bx-plus"></i> Add New
+    </a>
+    <div id="cart">
+      <a href="{% url 'invoice:cart' %}" class="cart-icon">
+        <i class="bx bx-cart" style="font-size: 30px; color:#0b970b;"></i>
+        {% if quantity %}
+        <span class="cart-count text-danger">{{ quantity }}</span>
+        {% endif %}
+      </a>
+    </div>
+  </div>
+  <form method="get" action="" class="mb-4">
+    <div class="input-group">
+      <input
+        type="text"
+        name="q"
+        class="form-control"
+        placeholder="Search items"
+        value="{{ request.GET.q }}"
+      />
+      <div class="input-group-append">
+        <button type="submit" class="btn btn-primary">
+          <i class="bx bx-search"></i> Search
+        </button>
+      </div>
+    </div>
+  </form>
+  <div class="table-responsive">
+    <table class="table table-hover">
+      <thead class="thead-dark">
+        <tr>
+          <th>Description</th>
+          <th>Price (₦)</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in items %}
+        <tr>
+          <td>{{ item.description }}</td>
+          <td>{{ item.unit_price|intcomma }}</td>
+          <td>
+            <button
+              class="btn btn-outline-primary add-to-cart"
+              data-item-id="{{ item.id }}"
+            >
+              <i class="bx bx-cart-add"></i>
+            </button>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- CSRF token for AJAX -->
+<meta name="csrf-token" content="{{ csrf_token }}" />
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Select all "add-to-cart" buttons
+    const addToCartButtons = document.querySelectorAll(".add-to-cart");
+
+    // Add click event listener to each button
+    addToCartButtons.forEach((button) => {
+      button.addEventListener("click", function (event) {
+        event.preventDefault(); // Prevent default button behavior
+
+        const itemId = this.getAttribute("data-item-id"); // Get the item ID
+        console.log(itemId);
+        if (!itemId) {
+          console.error("Item ID not found. Check 'data-item-id' attribute.");
+          return;
+        }
+
+        // Get CSRF token from meta tag
+        const csrfToken = document.querySelector(
+          'meta[name="csrf-token"]'
+        ).content;
+        if (!csrfToken) {
+          console.error(
+            "CSRF token not found. Ensure your template includes the CSRF meta tag."
+          );
+          return;
+        }
+
+        // Log debug information
+        console.log("Attempting to add item:", itemId);
+
+        // Make AJAX POST request
+        // Make AJAX POST request with FormData
+        fetch("{% url 'invoice:add_to_invoice_item' %}", {
+          method: "POST",
+          headers: {
+            "X-CSRFToken": csrfToken, // Include CSRF token
+          },
+          body: JSON.stringify({ item_id: itemId, quantity: 1 }), // Send data as json
+        })
+          .then((response) => {
+            if (response.ok) {
+              return response.json();
+            }
+            throw new Error("Network response was not ok");
+          })
+          .then((data) => {
+            // Handle success
+            console.log("Server response:", data);
+            alert(data.message || "Item added to cart successfully!");
+          })
+          .catch((error) => {
+            // Handle errors
+            console.error("Error adding item to cart:", error);
+            alert("Failed to add item to cart. Check console for details.");
+          });
+      });
+    });
+  });
+</script>
+
+{% endblock %}
