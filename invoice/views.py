@@ -132,7 +132,7 @@ def invoice_detail(request, invoice_id):
 
 @login_required
 def invoice_list(request):
-    invoices = Invoice.objects.filter(customer=request.user)  # Get invoices for the logged-in user
+    invoices = Invoice.objects.all()
     return render(request, "invoice/invoice_list.html", {"invoices": invoices})
 
 
